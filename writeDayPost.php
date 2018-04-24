@@ -64,22 +64,43 @@ $resultado = mysqli_query($conn,"SELECT posts,total_rate FROM posts ORDER BY tot
 
 
 //Coge el primer elemento de la fila
-$fila=mysqli_fetch_array($resultado, 2);
+if ($fila=mysqli_fetch_array($resultado, 2)){
 
-$post_of_the_day = ""."'".$fila[0]."'";
-
-$sql = "INSERT INTO post_of_the_day (post_of_the_day,total_rate)
-VALUES ($post_of_the_day,$fila[1])";
-
-if ($conn->query($sql) === TRUE) {
-    writeLog("Post of the day created successfully");
-    echo "Post of the day created successfully\n";
-    // Commit transaction
-    mysqli_commit($conn);
-} else {
-    writeLog("Error: " . $sql . "<br>" . $conn->error);
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    $post_of_the_day = ""."'".$fila[0]."'";
+    
+    $sql = "INSERT INTO post_of_the_day (post_of_the_day,total_rate)
+    VALUES ($post_of_the_day,$fila[1])";
+    
+    if ($conn->query($sql) === TRUE) {
+        writeLog("Post of the day created successfully");
+        echo "Post of the day created successfully\n";
+        // Commit transaction
+        mysqli_commit($conn);
+    } else {
+        writeLog("Error: " . $sql . "<br>" . $conn->error);
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    $sql = "INSERT INTO best_posts (posts,total_rate)
+    VALUES ($post_of_the_day,$fila[1])";
+    
+    if ($conn->query($sql) === TRUE) {
+        writeLog("Insert into best_posts successfully");
+        echo "Insert into best_posts successfully\n";
+        // Commit transaction
+        mysqli_commit($conn);
+    } else {
+        writeLog("Error: " . $sql . "<br>" . $conn->error);
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+}else{
+    writeLog("There are no posts. Cannot insert in the post_of_the_day and best_posts...");
+    echo "There are no posts. Cannot insert in the post_of_the_day and best_posts...\n";
 }
+
+
+
 
 
 $conn->close();
