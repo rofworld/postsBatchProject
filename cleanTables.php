@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "pollo0123";
 $dbname = "postOfToday";
 
 echo "Starting cleanTables.php...\n";
