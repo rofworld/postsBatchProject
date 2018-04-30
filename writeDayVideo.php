@@ -25,10 +25,10 @@ if ($conn->query($sql) === TRUE) {
 }
 
 
-echo "In table post_of_the_day...\n";
+echo "In table videoOfToday.video_of_the_day...\n";
 
 
-$sql = "delete from postOfToday.post_of_the_day";
+$sql = "delete from videoOfToday.video_of_the_day";
 
 if ($conn->query($sql) === TRUE) {
     echo "Deleting table ...\n";
@@ -38,7 +38,7 @@ if ($conn->query($sql) === TRUE) {
 }
 
 
-$sql = "ALTER TABLE postOfToday.post_of_the_day AUTO_INCREMENT = 1";
+$sql = "ALTER TABLE videoOfToday.video_of_the_day AUTO_INCREMENT = 1";
 
 if ($conn->query($sql) === TRUE) {
     echo "Restarting autoincrement to 1...\n";
@@ -51,30 +51,31 @@ if ($conn->query($sql) === TRUE) {
 
 
 
-$resultado = mysqli_query($conn,"SELECT posts,total_rate FROM postOfToday.posts ORDER BY total_rate DESC");
+$resultado = mysqli_query($conn,"SELECT * FROM videoOfToday.videos ORDER BY total_rate DESC");
 
 
 //Coge el primer elemento de la fila
 if ($fila=mysqli_fetch_array($resultado, 2)){
-
-    $post_of_the_day = mysqli_real_escape_string($conn, strval($fila[0]));
     
-    $sql = "INSERT INTO postOfToday.post_of_the_day (post_of_the_day,total_rate)
-    VALUES ('$post_of_the_day','$fila[1]')";
+    $url_escaped=mysqli_real_escape_string($conn, $fila[1]);
+    $path_escaped = mysqli_real_escape_string($conn,$fila[2]);
+    
+    $sql = "INSERT INTO videoOfToday.video_of_the_day (url,path,video_type,total_rate)
+    VALUES ('$url_escaped','$path_escaped','$fila[3]','$fila[4]')";
     
     if ($conn->query($sql) === TRUE) {
-        echo "Post of the day created successfully\n";
+        echo "Video of the day created successfully\n";
         // Commit transaction
         mysqli_commit($conn);
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
     
-    $sql = "INSERT INTO postOfToday.best_posts (posts,total_rate)
-    VALUES ('$post_of_the_day','$fila[1]')";
+    $sql = "INSERT INTO videoOfToday.best_videos (url,path,video_type,total_rate)
+    VALUES ('$url_escaped','$path_escaped','$fila[3]','$fila[4]')";
     
     if ($conn->query($sql) === TRUE) {
-        echo "Insert into best_posts successfully\n";
+        echo "Insert into best_videos successfully\n";
         // Commit transaction
         mysqli_commit($conn);
     } else {
@@ -82,7 +83,7 @@ if ($fila=mysqli_fetch_array($resultado, 2)){
     }
     
 }else{
-    echo "There are no posts. Cannot insert in the post_of_the_day and best_posts...\n";
+    echo "There are no videos. Cannot insert in the video_of_the_day and best_videos...\n";
 }
 
 

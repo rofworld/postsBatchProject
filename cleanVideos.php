@@ -26,10 +26,23 @@ if ($conn->query($sql) === TRUE) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
+//Delete Files
 
-echo "In table posts...\n";
+$result=mysqli_query($conn,"select path from videoOfToday.videos");
 
-$sql = "delete from postOfToday.posts";
+echo "Deleting files...\n";
+while ($fila = mysqli_fetch_array($result, 2)) {
+    
+    unlink($fila[0]);
+}
+echo "End Deleting Files.\n";
+
+
+
+//Delete table videos
+echo "In table videos...\n";
+
+$sql = "delete from videoOfToday.videos";
 
 if ($conn->query($sql) === TRUE) {
     echo "Deleting table ...\n";
@@ -38,15 +51,6 @@ if ($conn->query($sql) === TRUE) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
-
-$sql = "ALTER TABLE postOfToday.posts AUTO_INCREMENT = 1";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Restarting autoincrement to 1...\n";
-    mysqli_commit($conn);
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
 
 
 $conn->close();
