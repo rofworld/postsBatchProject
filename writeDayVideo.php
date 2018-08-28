@@ -71,11 +71,24 @@ if ($fila=mysqli_fetch_array($resultado, 2)){
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
     
+    
+    
     $sql = "INSERT INTO videoOfToday.best_videos (url,path,video_type,total_rate)
     VALUES ('$url_escaped','$path_escaped','$fila[3]','$fila[4]')";
     
     if ($conn->query($sql) === TRUE) {
         echo "Insert into best_videos successfully\n";
+        // Commit transaction
+        mysqli_commit($conn);
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    
+    $sql="DELETE FROM videoOfToday.videos WHERE id='$fila[0]'";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Video of the day deleted from video list\n";
         // Commit transaction
         mysqli_commit($conn);
     } else {
