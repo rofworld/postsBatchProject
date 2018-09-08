@@ -39,16 +39,6 @@ if ($conn->query($sql) === TRUE) {
 }
 
 
-$sql = "ALTER TABLE postOfToday.posts AUTO_INCREMENT = 1";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Restarting autoincrement to 1...\n";
-    mysqli_commit($conn);
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
-
-
 $conn->close();
 
 
