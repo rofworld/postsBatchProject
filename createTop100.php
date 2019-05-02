@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "pollo0123";
-$dbname = "postOfToday";
+$dbname = "videoOfToday";
 
 echo "Starting createTop100.php...\n";
 echo date(DATE_RFC822)."\n";
@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 echo "Moving to best_videos...\n";
 
 
-$resultado = mysqli_query($conn,"SELECT * FROM videoOfToday.videos where TIMESTAMPDIFF(DAY,NOW(),uploadDate) > 1");
+$resultado = mysqli_query($conn,"SELECT * FROM videoOfToday.videos where TIMESTAMPDIFF(DAY,uploadDate,NOW()) > 0");
 
 
 //Coge el primer elemento de la fila
@@ -32,8 +32,8 @@ while ($fila=mysqli_fetch_array($resultado, 2)){
     
     
     
-    $sql = "INSERT INTO videoOfToday.best_videos (url,path,video_type,total_rate,uploadDate)
-    VALUES ('$url_escaped','$path_escaped','$fila[3]','$fila[4]','$fila[5]')";
+    $sql = "INSERT INTO videoOfToday.best_videos (url,path,video_type,total_rate,uploadDate,title,user)
+    VALUES ('$url_escaped','$path_escaped','$fila[3]','$fila[4]','$fila[5]','$fila[6]','$fila[7]')";
     
     if ($conn->query($sql) === TRUE) {
         echo "Insert into best_videos successfully\n";
